@@ -163,18 +163,20 @@ def get_database_connection():
         connection = pymysql.connect(
             host=getenv('DB_HOST', 'localhost'),
             user=getenv('DB_USER', 'root'),
-            password=getenv('DB_PASSWORD', ''),     # don't hardcode in code
+            password=getenv('DB_PASSWORD', ''),
             database=getenv('DB_NAME', 'under'),
-            port=int(getenv('DB_PORT', '3306')),    # ← port added
+            port=int(getenv('DB_PORT', '3306')),
             autocommit=False
         )
         return connection
-    except pymysql.MySQLError as e:
-        st.error(f"Error connecting to the database: {e}")
+    except Exception as e:
+        st.warning(f"Database connection failed: {e}. Running in demo mode.")
         return None
 
 def init_database():
     connection = get_database_connection()
+    if not connection:
+        return
     if connection:
         try:
             with connection.cursor() as cursor:

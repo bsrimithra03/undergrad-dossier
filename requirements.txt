@@ -1,16 +1,10 @@
 streamlit
 pandas
-selenium
 numpy
 plotly
-geocoder
 pymysql
-geopy
 pdfminer.six
-streamlit-tags
 pillow
-nltk
-scikit-learn
 reportlab
 python-dotenv
 bcrypt
