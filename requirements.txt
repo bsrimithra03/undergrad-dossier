@@ -10,7 +10,7 @@ pdfminer.six
 streamlit-tags
 pillow
 nltk
-spacy
 scikit-learn
 reportlab
 python-dotenv
+bcrypt
