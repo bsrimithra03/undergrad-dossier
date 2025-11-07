@@ -5,6 +5,14 @@ st.set_page_config(page_title="UNDERGRADE DOSSIER", page_icon=":page_facing_up:"
 # Standard libs
 # ==============================
 import os
+from os import getenv
+from dotenv import load_dotenv   # pip install python-dotenv
+import pymysql
+
+# Load environment variables
+load_dotenv()
+
+
 import io
 import re
 import uuid
@@ -16,7 +24,9 @@ import datetime
 import platform
 import base64
 import warnings
-import streamlit as st
+
+
+
 
 # ==============================
 # Third-party libs
@@ -151,10 +161,11 @@ def get_device_info():
 def get_database_connection():
     try:
         connection = pymysql.connect(
-            host=os.getenv('DB_HOST', 'localhost'),
-            user=os.getenv('DB_USER', 'root'),
-            password=os.getenv('DB_PASSWORD', 'Gopi1431@@@@'),  # default as in your script
-            database=os.getenv('DB_NAME', 'resume_analyzer'),
+            host=getenv('DB_HOST', 'localhost'),
+            user=getenv('DB_USER', 'root'),
+            password=getenv('DB_PASSWORD', ''),     # don't hardcode in code
+            database=getenv('DB_NAME', 'under'),
+            port=int(getenv('DB_PORT', '3306')),    # ← port added
             autocommit=False
         )
         return connection
@@ -597,32 +608,44 @@ def get_feedback_data() -> pd.DataFrame:
 # Pages
 # ==============================
 def auth_page():
-    # Parul theme styling for student login
+    # Parul theme styling for student login with background image
     st.markdown("""
     <style>
+    .stApp {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
     .student-login-container {
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        background: linear-gradient(135deg, rgba(255,107,53,0.9) 0%, rgba(247,147,30,0.9) 100%);
         padding: 2rem;
         border-radius: 15px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         margin: 2rem 0;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
     }
     .student-header {
         text-align: center;
         color: white;
         margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     .parul-student-logo {
         text-align: center;
         font-size: 3rem;
         color: white;
         margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     .tab-container {
         background: rgba(255,255,255,0.1);
         border-radius: 10px;
         padding: 1rem;
         margin: 1rem 0;
+        backdrop-filter: blur(5px);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -898,32 +921,43 @@ def about_page():
     st.write("We value your privacy. Your resume data is used only for analysis. Admin dashboard aggregates anonymized analytics.")
 
 def admin_login():
-    # Parul theme styling
+    # Parul theme styling with background image
     st.markdown("""
     <style>
+    .stApp {
+        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1986&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
     .login-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%);
         padding: 2rem;
         border-radius: 15px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         margin: 2rem 0;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
     }
     .login-header {
         text-align: center;
         color: white;
         margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     .parul-logo {
         text-align: center;
         font-size: 3rem;
         color: #FF6B35;
         margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     .stTextInput > div > div > input {
-        background-color: rgba(255,255,255,0.1);
+        background-color: rgba(255,255,255,0.2);
         border: 2px solid #FF6B35;
         border-radius: 10px;
-        color: black;
+        color: white;
     }
     .stButton > button {
         background: linear-gradient(45deg, #FF6B35, #F7931E);
@@ -933,6 +967,7 @@ def admin_login():
         padding: 0.5rem 2rem;
         font-weight: bold;
         width: 100%;
+        box-shadow: 0 4px 15px rgba(255,107,53,0.3);
     }
     </style>
     """, unsafe_allow_html=True)

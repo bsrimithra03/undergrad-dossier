@@ -13,3 +13,4 @@ nltk
 spacy
 scikit-learn
 reportlab
+python-dotenv
